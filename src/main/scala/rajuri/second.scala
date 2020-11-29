@@ -12,11 +12,14 @@ object second extends App {
 
   val ut = new SparkUtility
   val spark: SparkSession = ut.getSparkSession
+  val ls = Seq(2, 3)
+  val rdd = spark.sparkContext.parallelize(ls,1)
+  val rd = rdd.map(x => Emp(x))
+  //  val rdd = spark.sparkContext.cassandraTable("test", "emp").select("emp_id")
+  rd.deleteFromCassandra("test", "emp",keyColumns = SomeColumns("emp_id"))
+  //  println("completed deleting the records")
 
-  val rdd = spark.sparkContext.cassandraTable("test", "emp").select("emp_id")
-//  rdd.deleteFromCassandra("test", "emp",keyColumns = SomeColumns("emp_id"))
-//  println("completed deleting the records")
 
-
-//  sc.parallelize(Seq(Key("1"))).deleteFromCassandra("test", "word_groups", keyColumns = SomeColumns("emp_id")
+  //  sc.parallelize(Seq(Key("1"))).deleteFromCassandra("test", "word_groups", keyColumns = SomeColumns("emp_id")
+  spark.stop()
 }
